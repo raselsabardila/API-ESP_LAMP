@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }))
 const PORT = process.env.PORT
 
 const client_id = `server_${ Math.random().toString().slice(3) }`
-const mqtt_url = `mqtt://${ process.env.MQTT_BROKER }:${ process.env.MQTT_PORT }`
+const mqtt_url = `mqtt://broker.emqx.io:1883`
 const mqtt_topic = "robomik/data/modules/relay"
 
 const client_mqtt = mqtt.connect(
