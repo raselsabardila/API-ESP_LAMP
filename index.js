@@ -11,7 +11,7 @@ const PORT = process.env.PORT
 
 const client_id = `server_${ Math.random().toString().slice(3) }`
 const mqtt_url = `mqtt://broker.emqx.io:1883`
-const mqtt_topic = "robomik/data/modules/relay"
+const mqtt_topic = "/esp32/led"
 
 const client_mqtt = mqtt.connect(
     mqtt_url,
@@ -38,20 +38,19 @@ client_mqtt.on("message", (topic, payload) => {
 })
 
 app.post(
-    "/api/lampp",
+    "/api/led",
     (req, res) => {
         if(!client_mqtt.connected) return res.status(402).json({ status: false, message: "MQTT not Connected" })
 
-        if(req.body.client_id === undefined || req.body.relay === undefined) return res.status(402).json({
+        if(req.body.state === undefined) return res.status(402).json({
             status: false,
-            message: "client_id and relay is required."
+            message: "state is required."
         })
 
         client_mqtt.publish(
             mqtt_topic,
             JSON.stringify({
-                "client-id": req.body.client_id,
-                "relay": req.body.relay
+                "state": req.body.state
             }),
             {
                 qos: 0,
